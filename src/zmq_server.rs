@@ -1,6 +1,5 @@
 
 use zmq::{Context, DEALER, ROUTER};
-const END_POINT : &str = "tcp://127.0.0.1:7050";
 
 pub fn server(end_point : &str) {
     let context = Context::new();

@@ -6,7 +6,6 @@ mod nanomsg_client;
 
 use hex_literal::hex;
 use std::thread;
-use zmq::{Context, DEALER, ROUTER};
 use rlp::{Decodable, DecoderError, Encodable, Rlp, RlpStream};
 
 const END_POINT1 : &'static str = "tcp://127.0.0.1:7050";
@@ -21,15 +20,6 @@ fn main_zmq() {
     zmq_server::server(END_POINT1);
 }
 
-
-fn usage() {
-    println!("Usage 1: bloom-ipc zmq");
-    println!("Usage 2: bloom-ipc nano server start");
-    println!("Usage 3: bloom-ipc nano client Alice");
-    println!("Usage 4: bloom-ipc nano client Bob");
-
-}
-
 fn main_nanomsg(proc_type : &str, client_id : String) {
     match proc_type {
         "client" => nanomsg_client::client(client_id, END_POINT2),
@@ -37,7 +27,6 @@ fn main_nanomsg(proc_type : &str, client_id : String) {
         _ => usage(),
     }
 }
-
 
 fn main() {
     let args: Vec<_> = std::env::args().collect();
@@ -52,7 +41,13 @@ fn main() {
     }
 }
 
+fn usage() {
+    println!("Usage 0: bloom-ipc zmq");
+    println!("Usage 1: bloom-ipc nano server start");
+    println!("Usage 2: bloom-ipc nano client Alice");
+    println!("Usage 3: bloom-ipc nano client Bob");
 
+}
 
 #[test]
 fn test_rlp_encode_decode() {
