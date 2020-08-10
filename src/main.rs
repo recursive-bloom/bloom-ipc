@@ -3,10 +3,11 @@ mod zmq_server;
 mod zmq_client;
 mod nanomsg_server;
 mod nanomsg_client;
+mod interactive;
 
 use hex_literal::hex;
 use std::thread;
-use rlp::{Decodable, DecoderError, Encodable, Rlp, RlpStream};
+use rlp::{ Decodable, DecoderError, Encodable, Rlp, RlpStream };
 
 const END_POINT1 : &'static str = "tcp://127.0.0.1:7050";
 const END_POINT2: &'static str = "tcp://127.0.0.1:7050";
@@ -47,6 +48,29 @@ fn usage() {
     println!("Usage 2: bloom-ipc nano client Alice");
     println!("Usage 3: bloom-ipc nano client Bob");
 
+}
+
+#[test]
+fn test_send_to_tx_pool() {
+    use zmq::{Context, DEALER, ROUTER};
+    use std::time::Duration;
+
+    // let context = Context::new();
+    let socket = Context::new().socket(DEALER).unwrap();
+    socket.set_identity( &hex!("1234567890").to_vec() ).unwrap();
+    socket.connect("tcp://127.0.0.1:7050").unwrap();
+
+    loop {
+        socket.send("hello", 0).unwrap();
+        let mut rmp = socket.recv_multipart(0).unwrap();
+        // println!("client thread, received from server, #received_parts: {:?}", received_parts);
+        println!(
+            "\tclient thread, received from server, #received_parts: {:x?}; {:x?}",
+            rmp.pop().unwrap(),
+            rmp.pop().unwrap(),
+        );
+        thread::sleep(Duration::from_millis(1000));
+    }
 }
 
 #[test]
