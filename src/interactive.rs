@@ -16,7 +16,7 @@ fn get_blocks_after_number(number: u128) -> Vec<Block> {
 fn get_accounts_info(address_list : Vec<Address>) -> Vec<(U256, U256)> {
     let nonce = U256::from(0);
     let balance : U256 = U256::from(0);
-    let info_list : Vec<(U256, U256)> = vec![];
+    let mut info_list: Vec<(U256, U256)> = vec![];
     info_list.push((nonce, balance));
     info_list
 }
